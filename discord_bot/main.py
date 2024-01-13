@@ -1,8 +1,9 @@
-import shlex
-import subprocess
+# import shlex
+# import subprocess
 
 import discord
 
+from discord_bot.shell_exec import shell_exec
 from env import TOKEN
 
 intents = discord.Intents.default()
@@ -24,16 +25,7 @@ async def on_message(message):
         await message.channel.send("Hello!")
 
     if message.content.startswith("$sh"):
-        command_text = message.content[len("$sh ") :]
-        try:
-            args = shlex.split(command_text)
-            print(args)
-            output = subprocess.check_output(args, text=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            output = f"Error: {e.output}"
-
-        # 結果の送信
-        await message.channel.send(f"```\n{output}\n```")
+        await shell_exec(message)
 
 
 client.run(TOKEN)
