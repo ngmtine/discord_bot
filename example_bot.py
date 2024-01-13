@@ -1,3 +1,6 @@
+import shlex
+import subprocess
+
 import discord
 
 from env import TOKEN
@@ -16,8 +19,21 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
+
     if message.content.startswith("$hello"):
         await message.channel.send("Hello!")
+
+    if message.content.startswith("$sh"):
+        command_text = message.content[len("$sh ") :]
+        try:
+            args = shlex.split(command_text)
+            print(args)
+            output = subprocess.check_output(args, text=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            output = f"Error: {e.output}"
+
+        # 結果の送信
+        await message.channel.send(f"```\n{output}\n```")
 
 
 client.run(TOKEN)
