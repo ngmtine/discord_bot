@@ -1,0 +1,7 @@
+{
+    "editor.formatOnSave": true,
+    "isort.check": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true // isortでimport順自動整形
+    }
+}
