@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Discord Bot",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/discord_bot/main.py",
+            "console": "integratedTerminal",
+            "env": {
+                "VARIABLE_NAME": "value"
+            }
+        }
+    ]
+}
