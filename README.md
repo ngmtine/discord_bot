@@ -1,6 +1,7 @@
 # Discord Shell Executor Bot
 
 この Discord bot は、指定されたシェルコマンドを実行し、その結果を Discord チャンネルに送信します  
+discord との通信は[discord.py](https://discordpy.readthedocs.io/ja/latest/index.html#)を使用しています  
 主な機能は以下の通りです
 
 ```
@@ -11,19 +12,28 @@ $restart 再起動（ただしメインプロセスが死んでた場合はそ�
 
 # セットアップ
 
-```sh
-pip install discord.py
-```
+discord の bot を作成します  
+[参考：Bot アカウント作成](https://discordpy.readthedocs.io/ja/latest/discord.html)  
+Message Content Intent を有効にしておいてください
 
 env.py を編集する
 
 ```py
-TOKEN = 'your-discord-bot-token'
+TOKEN = "your-discord-bot-token"
 ```
 
 # 実行
 
 ```sh
+poetry install
+poetry shell
+python main.py
+```
+
+もしくは poetry を使用しない場合
+
+```sh
+pip install discord.py
 python main.py
 ```
 
@@ -32,3 +42,7 @@ python main.py
 この bot はシェルコマンドを実行する能力を持っています  
 セキュリティ上の理由から、信頼できるユーザーのみがこれらのコマンドを使用できるように制限することを強く推奨します  
 特に、`$sh`は`subprocess(shell=True)`で実行するので、コマンドインジェクションのリスクがあります
+
+# todo
+
+sudo とか y/n とかの対話機能（現在は main.py を実行した端末が応答を待ち受けます）
