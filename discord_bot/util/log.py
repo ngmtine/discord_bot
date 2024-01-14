@@ -6,6 +6,7 @@ from logging.handlers import RotatingFileHandler
 repo_dir = os.getcwd()
 log_dir = os.path.join(repo_dir, "log")
 log_file = "bot.log"
+log_abspath = os.path.join(log_dir, log_file)
 
 # ディレクトリ作成
 if not os.path.exists(log_dir):
