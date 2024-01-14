@@ -35,15 +35,15 @@ async def shell_exec(message):
             responses.extend(f"```fix\n{i}```" for i in stderrs)
             log(f"STDERR: {stderr}", level="error")
 
+        # レスポンス空の場合
+        if not responses or all(res.isspace() for res in responses):
+            responses.extend(["```Execution completed successfully, but the result is empty```"])
+
     # 実行時エラー
     except Exception as e:
         errorstrs = split_message(f"EXECUTE ERROR:\n{str(e)}")
         responses.extend(f"```fix\n{i}```" for i in errorstrs)
         log(f"Execution error: {e}", level="error")
-
-    # レスポンス空の場合
-    if not responses or all(res.isspace() for res in responses):
-        responses.extend(["```Execution completed successfully, but the result is empty```"])
 
     # discordにメッセージ送信
     for res in responses:

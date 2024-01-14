@@ -27,11 +27,15 @@ async def python_exec(message):
         # 実行結果を取得
         result = output.getvalue()
 
-        # 整形
+        # 出力を整形
         if result:
             resultstr = split_message(f"PYTHON RESULT:\n{result}")
             responses.extend(f"```{i}```" for i in resultstr)
             log(f"STDOUT: {result}", level="info")
+
+        # レスポンス空の場合
+        if not responses or all(res.isspace() for res in responses):
+            responses.extend(["```Execution completed successfully, but the result is empty```"])
 
     # 実行時エラー
     except Exception as e:

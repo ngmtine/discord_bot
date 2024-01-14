@@ -39,6 +39,10 @@ async def javascript_exec(message):
             responses.extend(f"```fix\n{i}```" for i in stderrs)
             log(f"STDERR: {stderr}", level="error")
 
+        # レスポンス空の場合
+        if not responses or all(res.isspace() for res in responses):
+            responses.extend(["```Execution completed successfully, but the result is empty```"])
+
     # node使用不可エラー
     except RuntimeError as e:
         errorstrs = split_message(f"JAVASCRIPT EXECUTE ERROR:\n{str(e)}")
@@ -50,10 +54,6 @@ async def javascript_exec(message):
         errorstrs = split_message(f"JAVASCRIPT EXECUTE ERROR:\n{str(e)}")
         responses.extend(f"```fix\n{i}```" for i in errorstrs)
         log(f"Execution error: {e}", level="error")
-
-    # レスポンス空の場合
-    if not responses or all(res.isspace() for res in responses):
-        responses.extend(["```Execution completed successfully, but the result is empty```"])
 
     # discordにメッセージ送信
     for res in responses:
