@@ -46,4 +46,5 @@ python ./discord_bot/main.py
 
 # todo
 
-sudo とか y/n とかの対話機能（現在は main.py を実行した端末が応答を待ち受けます）
+sudo とか y/n とかの対話機能（現在は main.py を実行した端末が応答を待ち受けます）  
+`$sh vi`とかすると死ぬやつの対策
