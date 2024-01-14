@@ -34,4 +34,9 @@ async def on_message(message):
         await shell_restart(message)
 
 
-client.run(TOKEN)
+def run_bot():
+    client.run(TOKEN)
+
+
+if __name__ == "__main__":
+    run_bot()

@@ -27,14 +27,14 @@ TOKEN = "your-discord-bot-token"
 ```sh
 poetry install
 poetry shell
-python main.py
+python discord_bot
 ```
 
 もしくは poetry を使用しない場合
 
 ```sh
 pip install discord.py
-python main.py
+python ./discord_bot/main.py
 ```
 
 # 注意事項
