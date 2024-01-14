@@ -1,4 +1,5 @@
 import discord
+from javascript_exec import javascript_exec
 from python_exec import python_exec
 from shell_restart import shell_restart
 from show_log import show_log
@@ -37,6 +38,11 @@ async def on_message(message):
     if message.content.startswith("$py"):
         log(f"Execute python from {message.author}: {message.content}", level="info")
         await python_exec(message)
+
+    # js実行
+    if message.content.startswith("$js"):
+        log(f"Execute javascript from {message.author}: {message.content}", level="info")
+        await javascript_exec(message)
 
     # ログ表示
     if message.content.startswith("$log"):

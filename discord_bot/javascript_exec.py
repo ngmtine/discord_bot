@@ -1,28 +1,33 @@
 import os
 import subprocess
 
+from util.is_command_available import is_command_available
 from util.log import log
 from util.split_message import split_message
 
 
-# シェル実行
-async def shell_exec(message):
-    command_text = message.content[len("$sh ") :]
+# js実行
+async def javascript_exec(message):
+    command_text = message.content[len("$js ") :]
     responses = []
     original_dir = os.getcwd()
     output_dir = os.path.join(original_dir, "output")
+    jsfile_apspath = os.path.join(output_dir, "temp.js")
 
     try:
-        # ディレクトリ作成
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
-            log(f"Created directory: {output_dir}", level="info")
+        # node実行可能か確認
+        is_node_available = is_command_available("node")
+        if not is_node_available:
+            raise RuntimeError("Node.js is not available on this system.")
+
+        # jsコードを一時ファイルに保存
+        with open(jsfile_apspath, "w") as file:
+            file.write(command_text)
 
         # 実行
-        log(f"Executing command: {command_text}", level="info")
-        result = subprocess.run(command_text, shell=True, text=True, capture_output=True, cwd=output_dir)
-        stdout = result.stdout.strip()
-        stderr = result.stderr.strip()
+        process = subprocess.run(["node", jsfile_apspath], shell=False, text=True, capture_output=True, cwd=output_dir)
+        stdout = process.stdout.strip()
+        stderr = process.stderr.strip()
 
         # 出力を整形
         if stdout:
@@ -30,14 +35,19 @@ async def shell_exec(message):
             responses.extend(f"```{i}```" for i in stdouts)
             log(f"STDOUT: {stdout}", level="info")
         if stderr:
-            # markdownではcss使用できないため、シンタックスハイライトでfixを指定する（これはdiscordでは文字色が青になる） 実行時エラーも同様
             stderrs = split_message(f"STDERR:\n{stderr}")
             responses.extend(f"```fix\n{i}```" for i in stderrs)
             log(f"STDERR: {stderr}", level="error")
 
+    # node使用不可エラー
+    except RuntimeError as e:
+        errorstrs = split_message(f"JAVASCRIPT EXECUTE ERROR:\n{str(e)}")
+        responses.extend(f"```fix\n{i}```" for i in errorstrs)
+        log(f"Execution error: {e}", level="error")
+
     # 実行時エラー
     except Exception as e:
-        errorstrs = split_message(f"EXECUTE ERROR:\n{str(e)}")
+        errorstrs = split_message(f"JAVASCRIPT EXECUTE ERROR:\n{str(e)}")
         responses.extend(f"```fix\n{i}```" for i in errorstrs)
         log(f"Execution error: {e}", level="error")
 
@@ -49,3 +59,6 @@ async def shell_exec(message):
     for res in responses:
         await message.channel.send(res)
     log("Message sent to Discord", level="info")
+
+    # 後始末
+    os.remove(jsfile_apspath)
