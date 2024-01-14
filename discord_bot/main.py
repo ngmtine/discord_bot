@@ -2,6 +2,7 @@
 # import subprocess
 
 import discord
+from shell_restart import shell_restart
 
 from discord_bot.shell_exec import shell_exec
 from env import TOKEN
@@ -26,6 +27,9 @@ async def on_message(message):
 
     if message.content.startswith("$sh"):
         await shell_exec(message)
+
+    if message.content.startswith("$restart"):
+        await shell_restart(message)
 
 
 client.run(TOKEN)
