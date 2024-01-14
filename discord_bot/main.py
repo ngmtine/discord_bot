@@ -1,6 +1,3 @@
-# import shlex
-# import subprocess
-
 import discord
 from shell_restart import shell_restart
 
@@ -23,7 +20,7 @@ async def on_message(message):
         return
 
     if message.content.startswith("$hello"):
-        await message.channel.send("Hello!")
+        await message.channel.send("Hello world!")
 
     if message.content.startswith("$sh"):
         await shell_exec(message)
