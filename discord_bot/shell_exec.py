@@ -19,15 +19,14 @@ async def shell_exec(message):
     output_dir = os.path.join(original_dir, "output")
 
     try:
-        # 移動
+        # ディレクトリ作成
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
             log(f"Created directory: {output_dir}", level="info")
-        os.chdir(output_dir)
 
         # 実行
         log(f"Executing command: {command_text}", level="info")
-        result = subprocess.run(command_text, shell=True, text=True, capture_output=True)
+        result = subprocess.run(command_text, shell=True, text=True, capture_output=True, cwd=output_dir)
         stdout = result.stdout.strip()
         stderr = result.stderr.strip()
 
@@ -49,7 +48,7 @@ async def shell_exec(message):
 
     # レスポンス空の場合
     if not responses or all(res.isspace() for res in responses):
-        responses.extend("```Execution completed successfully, but the result is empty```")
+        responses.extend(["```Execution completed successfully, but the result is empty```"])
 
     # discordにメッセージ送信
     for res in responses:
