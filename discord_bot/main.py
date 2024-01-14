@@ -1,4 +1,5 @@
 import discord
+from python_exec import python_exec
 from shell_restart import shell_restart
 from show_log import show_log
 from util.log import log
@@ -31,6 +32,11 @@ async def on_message(message):
     if message.content.startswith("$sh"):
         log(f"Execute shell command from {message.author}: {message.content}", level="info")
         await shell_exec(message)
+
+    # python実行
+    if message.content.startswith("$py"):
+        log(f"Execute python from {message.author}: {message.content}", level="info")
+        await python_exec(message)
 
     # ログ表示
     if message.content.startswith("$log"):
