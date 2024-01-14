@@ -5,29 +5,32 @@ import subprocess
 # シェル実行
 async def shell_exec(message):
     command_text = message.content[len("$sh ") :]
+    response = ""
 
     try:
-        # 入力を分割
-        args = shlex.split(command_text)
-
         # 実行コマンドを出力
-        print(args)
-        await message.channel.send(f"```$ {' '.join(map(str, args))}```")
+        # await message.channel.send(f"```$ {' '.join(map(str, args))}```")
 
-        # 実行
-        result = subprocess.run(args, shell=False, text=True, capture_output=True)
+        # 実行（shell=Falseの場合）
+        # args = shlex.split(command_text)
+        # result = subprocess.run(args, shell=False, text=True, capture_output=True)
+
+        # 実行（shell=Trueの場合）
+        result = subprocess.run(command_text, shell=True, text=True, capture_output=True)
         stdout = result.stdout.strip()
         stderr = result.stderr.strip()
 
+        if stdout:
+            response += f"```STDOUT:\n{stdout}```"
+        if stderr:
+            # markdownではcss使用できないため、シンタックスハイライトでfixを指定する（これはdiscordでは文字色が青になる） 実行時エラーも同様
+            response += f"```fix\nSTDERR:\n{stderr}```"
+
     # 実行時エラー
     except Exception as e:
-        # markdownではcss使用できないため、シンタックスハイライトでfixを指定する（これはdiscordでは文字色が青になる） 標準エラー出力も同様
-        await message.channel.send(f"```fix\nEXECUTE ERROR:\n{e}```")
+        response += f"```fix\nEXECUTE ERROR:\n{e}```"
 
-    # 標準出力
-    if stdout:
-        await message.channel.send(f"```STDOUT:\n{stdout}```")
-
-    # 標準エラー出力
-    if stderr:
-        await message.channel.send(f"```fix\nSTDERR:\n{stderr}```")
+    # discordにメッセージ送信
+    if not response or response.isspace():
+        response = "```Execution completed successfully, but the result is empty```"
+    await message.channel.send(response)
