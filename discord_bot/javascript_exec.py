@@ -31,11 +31,11 @@ async def javascript_exec(message):
 
         # 出力を整形
         if stdout:
-            stdouts = split_message(f"STDOUT:\n{stdout}")
+            stdouts = split_message(f"JAVASCRIPT RESULT:\n{stdout}")
             responses.extend(f"```{i}```" for i in stdouts)
             log(f"STDOUT: {stdout}", level="info")
         if stderr:
-            stderrs = split_message(f"STDERR:\n{stderr}")
+            stderrs = split_message(f"JAVASCRIPT ERROR:\n{stderr}")
             responses.extend(f"```fix\n{i}```" for i in stderrs)
             log(f"STDERR: {stderr}", level="error")
 
