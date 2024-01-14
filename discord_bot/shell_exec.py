@@ -1,4 +1,4 @@
-import shlex
+import os
 import subprocess
 
 
@@ -6,8 +6,15 @@ import subprocess
 async def shell_exec(message):
     command_text = message.content[len("$sh ") :]
     response = ""
+    original_dir = os.getcwd()
+    output_dir = os.path.join(original_dir, "output")
 
     try:
+        # 移動
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+        os.chdir(output_dir)
+
         # 実行コマンドを出力
         # await message.channel.send(f"```$ {' '.join(map(str, args))}```")
 
