@@ -1,8 +1,12 @@
+import os
 import subprocess
 
 from util.log import log
 
-from env import REPOSITORY_PATH
+try:
+    from env import REPOSITORY_PATH
+except:
+    REPOSITORY_PATH = os.getcwd()
 
 
 # シェル実行スクリプト再起動（本当に死んでたら受け取れないので意味ない）
