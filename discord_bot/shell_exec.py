@@ -47,5 +47,7 @@ async def shell_exec(message):
     # discordにメッセージ送信
     if not response or response.isspace():
         response = "```Execution completed successfully, but the result is empty```"
-    await message.channel.send(response)
+    max_length = 2000
+    for i in range(0, len(response), max_length):
+        await message.channel.send(response[i : i + max_length])
     log("Message sent to Discord", level="info")
